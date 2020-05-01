@@ -201,6 +201,24 @@ RSpec.describe SimpleFlag do
     end
   end
 
+  describe '#presence' do
+    context 'when flag is truthy' do
+      it 'returns true' do
+        subject.define(:flag) { true }
+
+        expect(subject.presence(:flag)).to eq true
+      end
+    end
+
+    context 'when flag is falsy' do
+      it 'returns nil' do
+        subject.define(:flag) { false }
+
+        expect(subject.presence(:flag)).to eq nil
+      end
+    end
+  end
+
   describe '#with &block' do
     context 'when flag is truthy' do
       it 'calls the block' do

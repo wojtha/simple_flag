@@ -100,6 +100,21 @@ class SimpleFlag
   alias disabled? inactive?
   alias off? inactive?
 
+  # Returns thruthy value, returned by flag or nil
+  #
+  # @param [Symbol] name The name of the flag
+  # @param [Array<Symbol>] args The flag arguments
+  #
+  # @return [TrueClass,NilClass] Returns truthy value from flag or nil
+  #
+  # @example Usage in Rails
+  #   user.birth_date = birth_date || FEATURE.on?(:fake_data).presence && '1983-01-01'
+  #   user.birth_date = birth_date || FEATURE.presence(:fake_data) && '1983-01-01'
+  #
+  def presence(name, *args)
+    active?(name, *args) || nil
+  end
+
   def env?(*args)
     [*args].map(&:to_s).include?(env.to_s)
   end
