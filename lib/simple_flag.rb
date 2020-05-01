@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'simple_flag/version'
+require 'simple_flag/overrides'
 
 # Class FeatureFlag defines and stores feature flags
 #
@@ -48,6 +49,7 @@ require 'simple_flag/version'
 # @see http://blog.arkency.com/2015/11/simple-feature-toggle-for-rails-app/
 #
 class SimpleFlag
+  include Overrides
   FlagAlreadyDefined = Class.new(StandardError)
   FlagNotDefined = Class.new(StandardError)
   FlagNotOverridden = Class.new(StandardError)
@@ -80,51 +82,8 @@ class SimpleFlag
     block.call if active?(name, *args)
   end
 
-  def override(name, result = true, &block)
-    raise FlagNotDefined, "Feature flag `#{name}` is not defined" unless flag?(name)
-    raise FlagAlreadyDefined, "Feature flag `#{name}` is already overridden" if overridden?(name)
-
-    # We are using proc, not lambda, because proc does not check for number of arguments
-    original_block = @flags[name]
-    @overrides[name] = original_block
-    @flags[name] =
-      if block_given?
-        validate_flag_arity(name, original_block.arity, block.arity)
-        block
-      else
-        proc { |*_args| result }
-      end
-
-    original_block
-  end
-
-  def reset_override(name)
-    raise FlagNotOverridden, "Feature flag `#{name}` was not overridden" unless overridden?(name)
-
-    original_block = @overrides.delete(name)
-    @flags[name] = original_block
-  end
-
-  def reset_all_overrides
-    @overrides.each_key { |name| reset_override(name) }
-  end
-
-  def override_with(name, result = true, &block)
-    raise FlagNotDefined, "Feature flag `#{name}` is not defined" unless flag?(name)
-
-    original_block = @flags[name]
-    @flags[name] = proc { |*_args| result }
-    block.call
-  ensure
-    @flags[name] = original_block
-  end
-
   def flag?(name)
     @flags.key?(name)
-  end
-
-  def overridden?(name)
-    @overrides.key?(name)
   end
 
   def active?(name, *args)
