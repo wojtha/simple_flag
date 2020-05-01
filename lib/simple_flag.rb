@@ -92,11 +92,13 @@ class SimpleFlag
     flag.call(*args)
   end
   alias enabled? active?
+  alias on? active?
 
   def inactive?(name, *args)
     !active?(name, *args)
   end
   alias disabled? inactive?
+  alias off? inactive?
 
   def env?(*args)
     [*args].map(&:to_s).include?(env.to_s)

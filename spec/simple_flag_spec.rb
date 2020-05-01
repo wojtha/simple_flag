@@ -107,29 +107,7 @@ RSpec.describe SimpleFlag do
     end
   end
 
-  describe '#active?' do
-    context 'when flag is truthy' do
-      it 'returns true' do
-        subject.define(:flag) { true }
-
-        expect(subject.active?(:flag)).to eq true
-      end
-    end
-
-    context 'when flag is falsy' do
-      it 'returns false' do
-        subject.define(:flag) { false }
-
-        expect(subject.active?(:flag)).to eq false
-      end
-    end
-
-    context 'when flag is not defined' do
-      it 'returns false' do
-        expect(subject.active?(:flag)).to eq false
-      end
-    end
-
+  describe 'flag evaluation' do
     context 'when flag is defined with 1 argument' do
       before do
         subject.define(:flag) { |_a| 'a flag' }
@@ -171,74 +149,54 @@ RSpec.describe SimpleFlag do
     end
   end
 
-  describe '#enabled?' do
-    context 'when flag is truthy' do
-      it 'returns true' do
-        subject.define(:flag) { true }
+  %i[enabled? active? on?].each do |enabled_method|
+    describe "##{enabled_method}" do
+      context 'when flag is truthy' do
+        it 'returns true' do
+          subject.define(:flag) { true }
 
-        expect(subject.enabled?(:flag)).to eq true
+          expect(subject.public_send(enabled_method, :flag)).to eq true
+        end
       end
-    end
 
-    context 'when flag is falsy' do
-      it 'returns false' do
-        subject.define(:flag) { false }
+      context 'when flag is falsy' do
+        it 'returns false' do
+          subject.define(:flag) { false }
 
-        expect(subject.enabled?(:flag)).to eq false
+          expect(subject.public_send(enabled_method, :flag)).to eq false
+        end
       end
-    end
 
-    context 'when flag is not defined' do
-      it 'returns false' do
-        expect(subject.enabled?(:flag)).to eq false
-      end
-    end
-  end
-
-  describe '#inactive?' do
-    context 'when flag is truthy' do
-      it 'returns false' do
-        subject.define(:flag) { true }
-
-        expect(subject.inactive?(:flag)).to eq false
-      end
-    end
-
-    context 'when flag is falsy' do
-      it 'returns true' do
-        subject.define(:flag) { false }
-
-        expect(subject.inactive?(:flag)).to eq true
-      end
-    end
-
-    context 'when flag is not defined' do
-      it 'returns true' do
-        expect(subject.inactive?(:flag)).to eq true
+      context 'when flag is not defined' do
+        it 'returns false' do
+          expect(subject.public_send(enabled_method, :flag)).to eq false
+        end
       end
     end
   end
 
-  describe '#disabled?' do
-    context 'when flag is truthy' do
-      it 'returns false' do
-        subject.define(:flag) { true }
+  %i[disabled? inactive? off?].each do |enabled_method|
+    describe "##{enabled_method}" do
+      context 'when flag is truthy' do
+        it 'returns false' do
+          subject.define(:flag) { true }
 
-        expect(subject.disabled?(:flag)).to eq false
+          expect(subject.public_send(enabled_method, :flag)).to eq false
+        end
       end
-    end
 
-    context 'when flag is falsy' do
-      it 'returns true' do
-        subject.define(:flag) { false }
+      context 'when flag is falsy' do
+        it 'returns true' do
+          subject.define(:flag) { false }
 
-        expect(subject.disabled?(:flag)).to eq true
+          expect(subject.public_send(enabled_method, :flag)).to eq true
+        end
       end
-    end
 
-    context 'when flag is not defined' do
-      it 'returns true' do
-        expect(subject.disabled?(:flag)).to eq true
+      context 'when flag is not defined' do
+        it 'returns true' do
+          expect(subject.public_send(enabled_method, :flag)).to eq true
+        end
       end
     end
   end
