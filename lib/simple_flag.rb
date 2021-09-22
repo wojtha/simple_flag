@@ -50,6 +50,7 @@ require 'simple_flag/overrides'
 #
 class SimpleFlag
   include Overrides
+
   FlagAlreadyDefined = Class.new(StandardError)
   FlagNotDefined = Class.new(StandardError)
   FlagNotOverridden = Class.new(StandardError)

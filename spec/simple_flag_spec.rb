@@ -332,14 +332,18 @@ RSpec.describe SimpleFlag do
       expect { features.override(:flag, true) }.to raise_error(SimpleFlag::FlagNotDefined)
     end
 
-    it 'raises exception when trying to override already overridden flag' do
+    it 'overrides already overridden flag' do
       features = described_class.new do |f|
-        f.define(:flag) { false }
+        f.define(:flag) { 'original' }
       end
 
-      features.override(:flag, true)
+      features.override(:flag, 'override 1')
+      features.override(:flag, 'override 2')
 
-      expect { features.override(:flag, true) }.to raise_error(SimpleFlag::FlagAlreadyDefined)
+      expect( features.enabled?(:flag) ).to eq('override 2')
+
+      features.reset_override(:flag)
+      expect( features.enabled?(:flag) ).to eq('original')
     end
   end
 
