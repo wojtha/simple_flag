@@ -1,6 +1,8 @@
-class SimpleFlag
-  module Overrides
+# frozen_string_literal: true
 
+class SimpleFlag
+  # Overrides module provides methods for overriding feature flags during testing.
+  module Overrides
     def override(name, result = true, &block)
       raise FlagNotDefined, "Feature flag `#{name}` is not defined" unless flag?(name)
 
@@ -42,6 +44,5 @@ class SimpleFlag
     def overridden?(name)
       @overrides.key?(name)
     end
-
   end
 end

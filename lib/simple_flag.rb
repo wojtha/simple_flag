@@ -127,7 +127,7 @@ class SimpleFlag
 
     if original_arity != override_arity
       raise FlagArgumentsMismatch, "Flag '#{flag_name}' expects #{flag_arity} arguments, " \
-            "but #{override_arity} arguments were given"
+                                   "but #{override_arity} arguments were given"
     end
   end
 
@@ -135,11 +135,11 @@ class SimpleFlag
     if flag_arity < 0 && (flag_arity.abs - 1) > args_size
       # Contains variable -n-1 arguments
       raise FlagArgumentsMismatch, "Flag '#{flag_name}' expects #{flag_arity.abs - 1} or more arguments, " \
-            "but #{args_size} arguments were given"
+                                   "but #{args_size} arguments were given"
     elsif flag_arity >= 0 && flag_arity != args_size
       # Contains zero or fixed number of arguments
       raise FlagArgumentsMismatch, "Flag '#{flag_name}' expects #{flag_arity} arguments, " \
-            "but #{args_size} arguments were given"
+                                   "but #{args_size} arguments were given"
     end
   end
 end
