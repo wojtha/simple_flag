@@ -9,5 +9,8 @@
 /tmp/
 Gemfile.lock
 
+# ASDF-VM
+.tool-versions
+
 # rspec failure tracking
 .rspec_status
