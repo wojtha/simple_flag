@@ -40,17 +40,13 @@ RSpec.describe SimpleFlag do
     end
 
     it 'cannot define feature flag as proc' do
-      expect {
-        subject.define(:flag, proc { flag_result })
-      }
-      .to raise_error(ArgumentError, 'wrong number of arguments (given 2, expected 1)')
+      expect { subject.define(:flag, proc { flag_result }) }
+        .to raise_error(ArgumentError, 'wrong number of arguments (given 2, expected 1)')
     end
 
     it 'cannot define feature flag as lambda' do
-      expect {
-        subject.define(:flag, -> { flag_result })
-      }
-      .to raise_error(ArgumentError, 'wrong number of arguments (given 2, expected 1)')
+      expect { subject.define(:flag, -> { flag_result }) }
+        .to raise_error(ArgumentError, 'wrong number of arguments (given 2, expected 1)')
     end
   end
 
@@ -75,17 +71,13 @@ RSpec.describe SimpleFlag do
     end
 
     it 'cannot redefine feature flag as proc' do
-      expect {
-        subject.redefine(:flag, proc { flag_result })
-      }
-      .to raise_error(ArgumentError, 'wrong number of arguments (given 2, expected 1)')
+      expect { subject.redefine(:flag, proc { flag_result }) }
+        .to raise_error(ArgumentError, 'wrong number of arguments (given 2, expected 1)')
     end
 
     it 'cannot redefine feature flag as lambda' do
-      expect {
-        subject.redefine(:flag, -> { flag_result })
-      }
-      .to raise_error(ArgumentError, 'wrong number of arguments (given 2, expected 1)')
+      expect { subject.redefine(:flag, -> { flag_result }) }
+        .to raise_error(ArgumentError, 'wrong number of arguments (given 2, expected 1)')
     end
   end
 
@@ -155,7 +147,7 @@ RSpec.describe SimpleFlag do
         it 'returns true' do
           subject.define(:flag) { true }
 
-          expect(subject.public_send(enabled_method, :flag)).to eq true
+          expect(subject.public_send(enabled_method, :flag)).to be true
         end
       end
 
@@ -163,13 +155,13 @@ RSpec.describe SimpleFlag do
         it 'returns false' do
           subject.define(:flag) { false }
 
-          expect(subject.public_send(enabled_method, :flag)).to eq false
+          expect(subject.public_send(enabled_method, :flag)).to be false
         end
       end
 
       context 'when flag is not defined' do
         it 'returns false' do
-          expect(subject.public_send(enabled_method, :flag)).to eq false
+          expect(subject.public_send(enabled_method, :flag)).to be false
         end
       end
     end
@@ -181,7 +173,7 @@ RSpec.describe SimpleFlag do
         it 'returns false' do
           subject.define(:flag) { true }
 
-          expect(subject.public_send(enabled_method, :flag)).to eq false
+          expect(subject.public_send(enabled_method, :flag)).to be false
         end
       end
 
@@ -189,13 +181,13 @@ RSpec.describe SimpleFlag do
         it 'returns true' do
           subject.define(:flag) { false }
 
-          expect(subject.public_send(enabled_method, :flag)).to eq true
+          expect(subject.public_send(enabled_method, :flag)).to be true
         end
       end
 
       context 'when flag is not defined' do
         it 'returns true' do
-          expect(subject.public_send(enabled_method, :flag)).to eq true
+          expect(subject.public_send(enabled_method, :flag)).to be true
         end
       end
     end
@@ -206,7 +198,7 @@ RSpec.describe SimpleFlag do
       it 'returns true' do
         subject.define(:flag) { true }
 
-        expect(subject.presence(:flag)).to eq true
+        expect(subject.presence(:flag)).to be true
       end
     end
 
@@ -214,7 +206,7 @@ RSpec.describe SimpleFlag do
       it 'returns nil' do
         subject.define(:flag) { false }
 
-        expect(subject.presence(:flag)).to eq nil
+        expect(subject.presence(:flag)).to be_nil
       end
     end
   end
@@ -285,14 +277,14 @@ RSpec.describe SimpleFlag do
         f.define(:flag) { false }
       end
 
-      expect(features.flag?(:flag)).to eq true
+      expect(features.flag?(:flag)).to be true
     end
 
     it 'returns false if flag wasn\'t defined' do
-      features = described_class.new do |f|
+      features = described_class.new do |f|  # rubocop:disable Lint/EmptyBlock
       end
 
-      expect(features.flag?(:flag)).to eq false
+      expect(features.flag?(:flag)).to be false
     end
   end
 
@@ -326,7 +318,7 @@ RSpec.describe SimpleFlag do
     end
 
     it 'raises exception when trying to override non-existing flag' do
-      features = described_class.new do |f|
+      features = described_class.new do |f|  # rubocop:disable Lint/EmptyBlock
       end
 
       expect { features.override(:flag, true) }.to raise_error(SimpleFlag::FlagNotDefined)
@@ -340,10 +332,10 @@ RSpec.describe SimpleFlag do
       features.override(:flag, 'override 1')
       features.override(:flag, 'override 2')
 
-      expect( features.enabled?(:flag) ).to eq('override 2')
+      expect(features.enabled?(:flag)).to eq('override 2')
 
       features.reset_override(:flag)
-      expect( features.enabled?(:flag) ).to eq('original')
+      expect(features.enabled?(:flag)).to eq('original')
     end
   end
 
@@ -405,7 +397,7 @@ RSpec.describe SimpleFlag do
         f.override(:flag, true)
       end
 
-      expect(features.overridden?(:flag)).to eq true
+      expect(features.overridden?(:flag)).to be true
     end
 
     it 'returns false if flag wasn\'t overridden' do
@@ -413,7 +405,7 @@ RSpec.describe SimpleFlag do
         f.define(:flag) { false }
       end
 
-      expect(features.overridden?(:flag)).to eq false
+      expect(features.overridden?(:flag)).to be false
     end
   end
 end
